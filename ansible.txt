@@ -1,0 +1,33 @@
+# Install ansible on the ansible server.
+
+    2  sudo apt update
+    3  sudo apt install software-properties-common
+    4  sudo add-apt-repository --yes --update ppa:ansible/ansible
+    5  sudo apt install ansible
+    6  ansible --version
+==========
+
+# Configure jenkins master and jenkins slave.
+
+vi /opt/hosts/
+
+[jenkins-master]
+10.1.1.201
+[jenkins-master:vars]
+ansible_user=ubuntu
+ansible_ssh_private_key_file=/opt/devopsprj2.pem
+[jenkins-slave]
+10.1.1.215
+[jenkins-slave:vars]
+ansible_user=ubuntu
+ansible_ssh_private_key_file=/opt/devopsprj2.pem
+
+=======================
+
+ sudo chmod 400 devopsprj2.pem
+
+===============================
+
+Ansible commands:
+
+ ansible -i hosts all -m ping
