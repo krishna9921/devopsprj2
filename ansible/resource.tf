@@ -8,14 +8,37 @@ resource "aws_instance" "demo-server" {
   key_name      = "devopsprj2"
   vpc_security_group_ids = [aws_security_group.demo-sg.id]
   subnet_id = aws_subnet.dpw-public_subent_01.id
-  user_data = file("ansible.sh")
+  #user_data = file("ansible.sh")
  
- /* for_each = toset(["Jenkins-master","Jenkins-slave","Ansible"])
   tags = {
-    Name = "${each.key}"
-  }*/
+    Name = "Ansible Server"
+  }
 } 
 
+resource "null_resource" "name" {
+
+  connection {
+    type = "ssh"
+    host = aws_instance.demo-server.public_ip
+    private_key = file("~/Downloads/devopsprj2.pem")
+    user = "ubuntu"
+  }
+  provisioner "file" {
+    source = "ansible.sh"
+    destination = "/home/ubuntu/ansible.sh"
+  
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "sudo chmod +x /home/ubuntu/ansible.sh",
+      "sh /home/ubuntu/ansible.sh",
+    ]
+
+  
+  }
+  depends_on = [aws_instance.demo-server]
+}
 
 
 resource "aws_security_group" "demo-sg" {

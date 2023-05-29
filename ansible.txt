@@ -31,3 +31,29 @@ ansible_ssh_private_key_file=/opt/devopsprj2.pem
 Ansible commands:
 
  ansible -i hosts all -m ping
+
+
+ ===============================
+
+
+   connection {
+    type = "ssh"
+    host = aws_instance.demo-server.public_ip
+    private_key = file("/d/devopsprj2/devopsprj2.pem")
+    user = "ubuntu"
+
+  }
+
+  provisioner "remote-exec" {
+    inline = ["sudo apt update", "sudo apt install software-properties-common", "sudo add-apt-repository --yes --update ppa:ansible/ansible", "sudo apt install ansible"]
+  }
+
+
+
+  resource "null_resource" "prov_null" {
+  triggers = {
+    public_ip = aws_instance.demo-server.public_ip
+  }
+  
+
+}
