@@ -8,12 +8,10 @@ resource "aws_instance" "demo-server" {
   key_name      = "devopsprj2"
   vpc_security_group_ids = [aws_security_group.demo-sg.id]
   subnet_id = aws_subnet.dpw-public_subent_01.id
-  user_data = file("ansible.sh")
- 
- /* for_each = toset(["Jenkins-master","Jenkins-slave","Ansible"])
+  for_each = toset(["Jenkins-master","Jenkins-slave","Ansible"])
   tags = {
     Name = "${each.key}"
-  }*/
+  }
 } 
 
 
